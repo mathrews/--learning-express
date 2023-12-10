@@ -4,6 +4,7 @@ const port = 8000;
 const brandRoutes = require("./src/routes/brandRoutes.js");
 const categoryRoutes = require("./src/routes/categoryRoutes.js");
 const genderRoutes = require("./src/routes/genderRoutes.js");
+const productRoutes = require("./src/routes/productRoutes.js");
 
 app.use(express.json());
 
@@ -14,6 +15,7 @@ app.get("/", (req, res) => {
 app.use("/brands", brandRoutes);
 app.use("/categories", categoryRoutes);
 app.use("/genders", genderRoutes);
+app.use("/products", productRoutes);
 
 app.all("*", (req, res) => {
   res.status(404).send("Not found");
