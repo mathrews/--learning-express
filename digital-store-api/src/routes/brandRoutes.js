@@ -1,24 +1,26 @@
 const express = require("express");
 const router = express.Router();
 
-router.get("/", (req, res) => {
-  res.send("Lista de brands");
+const controller = require("../controllers/brandController");
+
+router.get("/", async (req, res) => {
+  res.send(await controller.listAll());
 });
 
-router.get("/:id", (req, res) => {
-  res.send(`Brand: ${req.params.id}`);
+router.get("/:id", async (req, res) => {
+  res.send(await controller.listOne(req.params.id))
 });
 
-router.post("/", (req, res) => {
-  res.send(`Criar a brand: ${JSON.stringify(req.body)}`);
+router.post("/", async (req, res) => {
+  res.send(await controller.create(req.body));
 });
 
-router.put("/:id", (req, res) => {
-  res.send(`editar a brand: ${req.params.id}`);
+router.put("/:id", async (req, res) => {
+  res.send(await controller.update(req.params.id, req.body));
 });
 
-router.delete("/:id", (req, res) => {
-  res.send(`deletar a brand: ${req.params.id}`);
+router.delete("/:id", async (req, res) => {
+  res.send(await controller.deletar(req.params.id));
 });
 
 module.exports = router;
