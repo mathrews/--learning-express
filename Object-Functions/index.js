@@ -4,5 +4,5 @@ let name = new StringClass("Mateus");
 
 console.log(name.toUpper());
 console.log(name.toLower());
-console.log(name.makeSplit());
+console.log(name.makeSplitAndSort());
 console.log(name.showLength());

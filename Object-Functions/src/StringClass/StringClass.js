@@ -11,8 +11,8 @@ class StringClass {
     return this.name.toLowerCase();
   }
 
-  makeSplit() {
-    return this.name.split("")
+  makeSplitAndSort() {
+    return this.name.split("").sort();
   }
 
   showLength() {
