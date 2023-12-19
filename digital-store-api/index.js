@@ -6,6 +6,7 @@ const categoryRoutes = require("./src/routes/categoryRoutes.js");
 const genderRoutes = require("./src/routes/genderRoutes.js");
 const productRoutes = require("./src/routes/productRoutes.js");
 
+
 app.use(express.json());
 
 app.get("/", (req, res) => {
