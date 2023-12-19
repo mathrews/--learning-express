@@ -13,7 +13,7 @@ app.get("/", (req, res) => {
   res.send("Seja bem vindo à api da Digital_Store.");
 }); //raiz
 
-app.use("/brands", brandRoutes);
+app.use("/brands", trandRoutes);
 app.use("/categories", categoryRoutes);
 app.use("/genders", genderRoutes);
 app.use("/products", productRoutes);
