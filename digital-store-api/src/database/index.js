@@ -1,19 +1,19 @@
 const mysql2 = require("mysql2/promise");
 
 async function execute(SQL) {
-  const connection = await mysql2.createConnection({
-    host: "localhost",
-    user: "root",
-    password: "Mate-0911",
-    database: "digital_store",
-    connectionLimit: 5,
-    port: 3307,
-  });
+    const connection = await mysql2.createConnection({
+        host: "localhost",
+        user: "root",
+        password: "Mate-0911",
+        database: "digital_store",
+        connectionLimit: 5,
+        port: 3307,
+    });
 
-  const [results] = await connection.query(SQL);
-  connection.destroy();
+    const [results] = await connection.query(SQL);
+    connection.destroy();
 
-  return results;
+    return results;
 }
 
-module.exports = {execute};
+module.exports = { execute };

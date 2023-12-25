@@ -1,4 +1,5 @@
 const express = require("express");
+const cors = require('cors');
 const app = express();
 const port = 8000;
 const brandRoutes = require("./src/routes/brandRoutes.js");
@@ -8,6 +9,7 @@ const productRoutes = require("./src/routes/productRoutes.js");
 
 
 app.use(express.json());
+app.use(cors());
 
 app.get("/", (req, res) => {
   res.send("Seja bem vindo à api da Digital_Store.");
