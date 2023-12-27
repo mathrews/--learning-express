@@ -23,7 +23,7 @@ router.post("/", async (req, res) => {
 });
 
 router.put("/:id", async (req, res) => {
-  res.send(`Edit product: ${req.params.id}`);
+  res.status((await controller.update(req.params.id, req.body)).status).send(await controller.update(req.params.id, req.body));
 });
 
 router.delete("/:id", async (req, res) => {
