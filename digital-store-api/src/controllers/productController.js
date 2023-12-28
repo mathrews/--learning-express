@@ -95,43 +95,53 @@ const update = async (id, data) => {
             await DB.execute(
                 `UPDATE ${table} SET product_image = '${data.product_image}' WHERE product_id = ${id};`
             );
-        } else if (data.product_discount) {
+        }
+        if (data.product_discount) {
             await DB.execute(
                 `UPDATE ${table} SET product_discount = ${data.product_discount} WHERE product_id = ${id};`
             );
-        } else if (data.product_price) {
+        }
+        if (data.product_price) {
             await DB.execute(
                 `UPDATE ${table} SET product_price = ${data.product_price} WHERE product_id = ${id};`
             );
-        } else if (data.product_sizes) {
+        }
+        if (data.product_sizes) {
             await DB.execute(
                 `UPDATE ${table} SET product_sizes = '${data.product_sizes}' WHERE product_id = ${id};`
             );
-        } else if (data.product_name) {
+        }
+        if (data.product_name) {
             await DB.execute(
                 `UPDATE ${table} SET product_name = '${data.product_name}' WHERE product_id = ${id};`
             );
-        } else if (data.product_colors) {
+        }
+        if (data.product_colors) {
             await DB.execute(
                 `UPDATE ${table} SET product_colors = '${data.product_colors}' WHERE product_id = ${id};`
             );
-        } else if (data.product_status) {
+        }
+        if (data.product_status) {
             await DB.execute(
                 `UPDATE ${table} SET product_status = ${data.product_status} WHERE product_id = ${id};`
             );
-        } else if (data.product_condition) {
+        }
+        if (data.product_condition) {
             await DB.execute(
                 `UPDATE ${table} SET product_condition = ${data.product_condition} WHERE product_id = ${id};`
             );
-        } else if (data.product_category) {
+        }
+        if (data.product_category) {
             await DB.execute(
                 `UPDATE ${table} SET product_category = ${data.product_category} WHERE product_id = ${id};`
             );
-        } else if (data.product_brand) {
+        }
+        if (data.product_brand) {
             await DB.execute(
                 `UPDATE ${table} SET product_brand = ${data.product_brand} WHERE product_id = ${id};`
             );
-        } else if (data.product_description) {
+        }
+        if (data.product_description) {
             await DB.execute(
                 `UPDATE ${table} SET product_description = '${data.product_description}' WHERE product_id = ${id};`
             );
@@ -147,9 +157,29 @@ const update = async (id, data) => {
     }
 };
 
+const deleteRemov = async (id) => {
+    try {
+        const line = await DB.execute(
+            `DELETE FROM ${table} WHERE product_id = ${id};`
+        );
+        return {
+            type: "Success",
+            message: line.affectedRows == 0 ? "Id não encontrado, tente novamente com um Id válido" : "Excluído com sucesso",
+            status: 200,
+        };
+    } catch (error) {
+        return {
+            type: "Error",
+            message: error.message,
+            status: 404,
+        };
+    }
+};
+
 module.exports = {
     listAll,
     listOne,
     create,
     update,
+    deleteRemov,
 };

@@ -19,15 +19,15 @@ router.get("/:id", async (req, res) => {
 });
 
 router.post("/", async (req, res) => {
-  res.status((await controller.create(req.body)).status).send(await controller.create(req.body));
+  res.send(await controller.create(req.body));
 });
 
 router.put("/:id", async (req, res) => {
-  res.status((await controller.update(req.params.id, req.body)).status).send(await controller.update(req.params.id, req.body));
+  res.send(await controller.update(req.params.id, req.body));
 });
 
 router.delete("/:id", async (req, res) => {
-  res.send(`Delete product: ${req.params.id}`);
+  res.send(await controller.deleteRemov(req.params.id));
 });
 
 module.exports = router;
