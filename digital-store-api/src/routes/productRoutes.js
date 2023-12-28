@@ -15,7 +15,7 @@ router.get("/", async (req, res) => {
 });
 
 router.get("/:id", async (req, res) => {
-  res.status((await controller.listOne(req.params.id)).status).send(await controller.listOne(req.params.id));
+  res.send(await controller.listOne(req.params.id));
 });
 
 router.post("/", async (req, res) => {
