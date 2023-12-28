@@ -1,25 +1,23 @@
-const mysql2 = require("mysql2/promise");
+const { Sequelize } = require('sequelize');
 
 async function execute(SQL) {
-    const connection = await mysql2.createConnection({
-        host: "localhost",
-        user: "root",
-        password: "Mate-0911",
-        database: "digital_store",
-        connectionLimit: 5,
-        port: 3307,
-    });
+    const sequelize = new Sequelize('digital_store', 'root', 'Mate-0911', {
+        host: 'localhost',
+        dialect: 'mysql',
+        port: 3307
+      });
 
-    connection.connect((err) => {
-        if (err) {
-            console.error("Error connecting to MySQL:", err);
-            return;
-        }
-        console.log("Connected to MySQL!");
-    });
-
-    const [results] = await connection.query(SQL);
-    connection.destroy();
+    // const connection = await mysql2.createConnection({
+    //     host: "localhost",
+    //     user: "root",
+    //     password: "Mate-0911",
+    //     database: "digital_store",
+    //     connectionLimit: 5,
+    //     port: 3307,
+    // });
+    
+    const [results] = await sequelize.query(SQL);
+    sequelize.close();
 
     return results;
 }
