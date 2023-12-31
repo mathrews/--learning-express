@@ -1,4 +1,3 @@
-const table = "brands";
 const DB = require("../database/index");
 const BrandModel = require("../models/brandModel");
 
@@ -14,6 +13,7 @@ async function listOne(id) {
 
 async function create(data) {
     try {
+        await DB.sync();
         if (!data.brand_name) {
             throw new Error("Brand_name é um campo obrigatório");
         }
@@ -37,6 +37,7 @@ async function create(data) {
 
 async function update(id, data) {
     try {
+        await DB.sync();
         if (!data.brand_name) {
             throw new Error("Brand_name é um campo obrigatório");
         }
@@ -73,6 +74,7 @@ async function update(id, data) {
 
 async function deletar(id) {
     try {
+        await DB.sync();
         return {
             type: "Success",
             message:

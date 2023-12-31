@@ -1,10 +1,11 @@
 const DB = require("../database/index");
-const table = "products";
+const ProductModel = require("../models/productModel");
 
 const listAll = async () => {
+    await DB.sync();
     return {
         type: "Success",
-        response: await DB.execute(`SELECT * FROM ${table}`),
+        response: await ProductModel.findAll(),
         status: 200,
     };
 };
