@@ -2,7 +2,6 @@ const DB = require("../database/index");
 const ProductModel = require("../models/productModel");
 
 const listAll = async () => {
-    await DB.sync();
     return {
         type: "Success",
         response: await ProductModel.findAll(),
