@@ -49,17 +49,22 @@ async function update(id, data) {
             brand.brand_status = data.brand_status;
 
             brand.save();
+
+            return {
+                type: 'Success',
+                data: brand
+            };
         } else {
             const brand = await listOne(id);
 
             brand.brand_name = data.brand_name;
             brand.save();
-        }
 
-        return {
-            type: "Success",
-            data: await listOne(id),
-        };
+            return {
+                type: 'Success',
+                data: brand
+            };
+        }
     } catch (error) {
         return {
             type: "Error",
