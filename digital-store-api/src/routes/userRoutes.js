@@ -14,4 +14,8 @@ router.post('/login', async (req, res) => {
     return res.send(await controller.login(req.body));
 });
 
+router.delete('/:id', async (req, res) => {
+    return res.status(200).send(await controller.destroy(req.params.id))
+})
+
 module.exports = router;

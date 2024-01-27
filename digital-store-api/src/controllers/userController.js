@@ -6,7 +6,7 @@ const table = "users";
 const listAll = async () => {
     try {
         return await DB.execute(
-            `SELECT user_id, user_name, user_email FROM ${table};`
+            `SELECT user_id, user_name, user_email, user_level FROM ${table};`
         );
     } catch (error) {
         return console.log(error.message);
@@ -19,10 +19,10 @@ const create = async (data) => {
             throw new Error("Dados incompletos.");
         }
 
-        const [emailExiste] = await DB.execute(`SELET * FROM ${table} WHERE user_email = ${data.user_email};`);
+        const [emailExiste] = await DB.execute(`SELECT * FROM ${table} WHERE user_email = '${data.user_email}';`);
         if (emailExiste) {
             return {
-                type: 'warning',
+                type: 'warn',
                 message: 'Este usuário já existe!'
             }
         }
@@ -33,9 +33,18 @@ const create = async (data) => {
             }
 
             console.log(hash)
-            await DB.execute(
-                `INSERT INTO ${table} (user_name, user_email, user_password, user_level) VALUES ('${data.user_name}', '${data.user_email}', '${hash}', ${data.user_level});`
-            );
+
+            console.log(data.user_level);
+            if (data.user_level == undefined) {
+                return {
+                    type: "error",
+                    message: "User_level undefined",
+                };
+            } else {
+                await DB.execute(
+                    `INSERT INTO ${table} (user_name, user_email, user_password, user_level) VALUES ('${data.user_name}', '${data.user_email}', '${hash}', ${data.user_level});`
+                );
+            }
         });
         
         return {
@@ -44,11 +53,27 @@ const create = async (data) => {
         };
     } catch (error) {
         return {
-            type: "Error",
+            type: "error",
             message: error.message,
         };
     }
 };
+
+const destroy = async (id) => {
+    try {
+        await DB.execute(`DELETE FROM ${table} WHERE user_id = ${id};`)
+        
+        return {
+            type: 'success',
+            message: 'Usuário deletado!'
+        }
+    } catch (error) {
+        return {
+            type: 'error',
+            message: error.message
+        }
+    }
+}
 
 const login = async (data) => {
     try {
@@ -98,4 +123,5 @@ module.exports = {
     login,
     checkToken,
     create,
+    destroy
 };
