@@ -1,103 +1,73 @@
-const DB = require("../database/index");
-const BrandModel = require("../models/brandModel");
+const DB = require('../database/index');
+const tabela = 'brands';
 
-async function listAll() {
-    return await BrandModel.findAll();
+async function listarTodos() {
+    return await DB.execute(`SELECT * FROM ${tabela};`)
 }
 
-async function listOne(id) {
-    return await BrandModel.findByPk(id);
+async function listarUm(id) {
+    return await DB.execute(`SELECT * FROM ${tabela} WHERE brand_id = ${id};`)
 }
 
-async function create(data) {
+async function criar(data) {
     try {
         if (!data.brand_name) {
-            throw new Error("Brand_name é um campo obrigatório");
+            throw new Error('brand_name é um campo obrigatório!');
         }
-
-        const line = await BrandModel.create({
-            brand_name: data.brand_name,
-            brand_status: data.brand_status,
-        });
-
+        const linha = await DB.execute(`INSERT INTO ${tabela} (brand_name) VALUES ('${data.brand_name}');`);
         return {
-            type: "Success",
-            data: line,
+            type: 'success',
+            data: await listarUm(linha.insertId)
         };
     } catch (error) {
         return {
-            type: "Error",
-            message: error,
-        };
+            type: 'error',
+            message: error.message
+        }
     }
 }
 
-async function update(id, data) {
+async function editar(id, data){
     try {
         if (!data.brand_name) {
-            throw new Error("Brand_name é um campo obrigatório");
+            throw new Error('brand_name é um campo obrigatório!');
         }
-
-        if (data.brand_status) {
-            // await DB.execute(
-            //     `UPDATE ${table} SET brand_name = '${data.brand_name}', brand_status = ${data.brand_status} WHERE brand_id = ${id};`
-            // );
-
-            const brand = await listOne(id);
-
-            brand.brand_name = data.brand_name;
-            brand.brand_status = data.brand_status;
-
-            brand.save();
-
-            return {
-                type: 'Success',
-                data: brand
-            };
-        } else {
-            const brand = await listOne(id);
-
-            brand.brand_name = data.brand_name;
-            brand.save();
-
-            return {
-                type: 'Success',
-                data: brand
-            };
+        if(data.brand_status){
+            await DB.execute(`UPDATE ${tabela} SET brand_name = '${data.brand_name}', brand_status = ${data.brand_status} WHERE brand_id = ${id};`);
+        }else{
+            await DB.execute(`UPDATE ${tabela} SET brand_name = '${data.brand_name}' WHERE brand_id = ${id};`);
+        }
+        return {
+            type: 'success',
+            data: await listarUm(id)
         }
     } catch (error) {
         return {
-            type: "Error",
-            message: error.message,
-        };
+            type: 'error',
+            message: error.message
+        }
     }
 }
 
 async function deletar(id) {
     try {
+        const linha = await DB.execute(`DELETE FROM ${tabela} WHERE brand_id = ${id};`);
         return {
-            type: "Success",
-            message:
-                (await BrandModel.destroy({
-                    where: {
-                        brand_id: id,
-                    },
-                })) >= 1
-                    ? "Excluido com sucesso"
-                    : "Id não encontrado",
-        };
+            type: "success",
+            message: linha.affectedRows != 0 ? "Excloido com sucesso." : "Id não encontrado"
+        }
     } catch (error) {
         return {
-            type: "Error",
-            message: error.message,
-        };
+            type: "error",
+            message: error.message
+        }
     }
 }
 
 module.exports = {
-    listAll,
-    listOne,
-    create,
-    update,
-    deletar,
-};
+    listarTodos,
+    listarUm,
+    criar,
+    editar,
+    deletar
+}

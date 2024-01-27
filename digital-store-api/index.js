@@ -1,33 +1,50 @@
 const express = require("express");
-const cors = require("cors");
 const app = express();
 const port = 8000;
-const brandRoutes = require("./src/routes/brandRoutes.js");
-const categoryRoutes = require("./src/routes/categoryRoutes.js");
-const genderRoutes = require("./src/routes/genderRoutes.js");
-const productRoutes = require("./src/routes/productRoutes.js");
-const DB = require("./src/database/index.js");
+const brandRoutes = require("./src/routes/brandRoutes");
+const categoryRoutes = require("./src/routes/categoryRoutes");
+const genderRoutes = require("./src/routes/genderRoutes");
+const userRoutes = require("./src/routes/userRoutes");
+const userController = require("./src/controllers/userController");
+const jwt = require('jsonwebtoken')
+const cors = require('cors')
 
-(async () => {
-    await DB.sync();
-})();
-
-app.use(express.json());
 app.use(cors());
+app.use(express.json());
 
-app.get("/", (req, res) => {
-    res.send("Seja bem vindo à api da Digital_Store.");
-}); //raiz
+app.get("/", (request, response) => {
+    response.send("Seja bem-vindo à API da Digital Store.");
+});
+
+app.use("/users", userRoutes);
+
+app.use(async (req, res, next) => {
+    if (!req.headers.authorization) {
+        return res.status(401).send("Token é necessário!");
+    }
+    const result = await userController.checkToken(
+        req.headers.authorization.split(" ")[1]
+    );
+    if (result.length === 0) {
+        return res.status(401).send("Token expirado!");
+    }
+    jwt.verify(req.headers.authorization.split(' ')[1], 'digital-store-api', (error) => {
+        if (error) {
+            return res.status(401).send('Token Expirado!')
+        }
+
+        next();
+    })
+})
 
 app.use("/brands", brandRoutes);
 app.use("/categories", categoryRoutes);
 app.use("/genders", genderRoutes);
-app.use("/products", productRoutes);
 
-app.all("*", (req, res) => {
-    res.status(404).send("Not found");
-}); //ultimo
+app.all("*", (request, response) => {
+    response.status(404).send("Not found");
+});
 
 app.listen(port, () => {
-    console.log(`Servidor rodando no link: http://localhost:${port}`);
+    console.log(`Servidor de pé no link: http://localhost:${port}`);
 });
