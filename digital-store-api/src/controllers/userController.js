@@ -19,12 +19,14 @@ const create = async (data) => {
             throw new Error("Dados incompletos.");
         }
 
-        const [emailExiste] = await DB.execute(`SELECT * FROM ${table} WHERE user_email = '${data.user_email}';`);
+        const [emailExiste] = await DB.execute(
+            `SELECT * FROM ${table} WHERE user_email = '${data.user_email}';`
+        );
         if (emailExiste) {
             return {
-                type: 'warn',
-                message: 'Este usuário já existe!'
-            }
+                type: "warn",
+                message: "Este usuário já existe!",
+            };
         }
 
         bcrypt.hash(data.user_password, 10, async (error, hash) => {
@@ -32,7 +34,7 @@ const create = async (data) => {
                 throw new Error(error.message);
             }
 
-            console.log(hash)
+            console.log(hash);
 
             console.log(data.user_level);
             if (data.user_level == undefined) {
@@ -46,7 +48,7 @@ const create = async (data) => {
                 );
             }
         });
-        
+
         return {
             type: "success",
             message: "Usuário criado com sucesso",
@@ -61,19 +63,63 @@ const create = async (data) => {
 
 const destroy = async (id) => {
     try {
-        await DB.execute(`DELETE FROM ${table} WHERE user_id = ${id};`)
-        
+        await DB.execute(`DELETE FROM ${table} WHERE user_id = ${id};`);
+
         return {
-            type: 'success',
-            message: 'Usuário deletado!'
-        }
+            type: "success",
+            message: "Usuário deletado!",
+        };
     } catch (error) {
         return {
-            type: 'error',
-            message: error.message
-        }
+            type: "error",
+            message: error.message,
+        };
     }
-}
+};
+
+const editUser = async (id, data) => {
+    try {
+        if (data.user_name) {
+            await DB.execute(
+                `UPDATE ${table} SET user_name = '${data.user_name}' WHERE user_id = ${id};`
+            );
+        }
+        if (data.user_email) {
+            const [emailExiste] = await DB.execute(
+                `SELECT * FROM ${table} WHERE user_email = '${data.user_email}';`
+            );
+            if (emailExiste) {
+                return {
+                    type: "warn",
+                    message: "Este usuário já existe!",
+                };
+            } else {
+                await DB.execute(
+                    `UPDATE ${table} SET user_email = '${data.user_email}' WHERE user_id = ${id};`
+                );
+            }
+        }
+        if (data.user_password) {
+            await DB.execute(
+                `UPDATE ${table} SET user_password = '${data.user_password}' WHERE user_id = ${id};`
+            );
+        }
+        if (data.user_level) {
+            await DB.execute(
+                `UPDATE ${table} SET user_level = ${data.user_level} WHERE user_id = ${id};`
+            );
+        }
+        return {
+            type: "success",
+            message: "Usuario modificado com sucesso",
+        };
+    } catch (error) {
+        return {
+            type: "error",
+            message: error.message,
+        };
+    }
+};
 
 const login = async (data) => {
     try {
@@ -123,5 +169,6 @@ module.exports = {
     login,
     checkToken,
     create,
-    destroy
+    destroy,
+    editUser,
 };
